@@ -3,5 +3,5 @@ def test_ping(test_app):
     resp = client.get("/ping")
     data = resp.get_json()
     assert resp.status_code == 200
-    assert data["message"] == "pong!"
+    assert data["message"] == "pong"
     assert data["status"] == "success"
