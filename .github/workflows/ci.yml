@@ -58,7 +58,6 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
       env:
         PORT: 5000
-        POSTGRES_DB: users
         DATABASE_TEST_URL: postgresql://postgres:postgres@postgres:5432/users
       ports:
         - 5000:5000
@@ -67,15 +66,13 @@ jobs:
       postgres:
         image: postgres:latest
         env:
+          POSTGRES_DB: users
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
 
     steps:
-      - name: ls
-        working-directory: ${{ env.WORKDIR }}
-        run: ls -la
       - name: Lint
         working-directory: ${{ env.WORKDIR }}
         run:  |
