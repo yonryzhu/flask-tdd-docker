@@ -72,8 +72,13 @@ jobs:
     steps:
       - name: Lint
         run: |
-          flake8 src
-          black src --check
-          isort src --check-only
+          pwd
+          ls
       - name: Test
-        run: pytest -p no:warnings
+        run: pytest -p
+      #   run: |
+      #     flake8 src
+      #     black src --check
+      #     isort src --check-only
+      # - name: Test
+      #   run: pytest -p no:warnings
