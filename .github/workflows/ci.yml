@@ -70,14 +70,10 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: PWD
-        run: pwd
-      - name: LS
-        run: ls -la
-      - name: Lint
-        run: flake8
-      - name: Test
-        run: pytest
+      - name: ls
+        run: ls /github/workspace
+      - name: ls
+        run: ls /usr/src/app
       #   run: |
       #     flake8 src
       #     black src --check
