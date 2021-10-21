@@ -92,6 +92,7 @@ jobs:
 
     env:
       REGISTRY: registry.heroku.com
+      HEROKU_APP: floating-stream-79447
       HEROKU_REGISTRY_IMAGE: registry.heroku.com/floating-stream-79447/web
 
     steps:
@@ -114,4 +115,4 @@ jobs:
           tags: ${{ env.HEROKU_REGISTRY_IMAGE }}
 
       - name: Create new release
-        run: heroku container:release web
+        run: heroku container:release web --app ${{ env.HEROKU_APP }}
