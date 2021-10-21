@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_restx import Api, Resource, fields
+
 from src import db
 from src.api.models import User
 

@@ -9,7 +9,8 @@ RUN apt update \
     && apt install netcat -y \
     && apt clean
 
-COPY ./requirements/base.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY ./requirements.txt .
+COPY ./requirements-dev.txt .
+RUN pip install -r requirements-dev.txt
 
 COPY . .
