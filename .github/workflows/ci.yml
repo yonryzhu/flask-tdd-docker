@@ -14,7 +14,7 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}
+      IMAGE: ghcr.io/${{ github.repository }}
 
     steps:
       - name: Checkout repository
@@ -92,8 +92,7 @@ jobs:
 
     env:
       REGISTRY: registry.heroku.com
-      HEROKU_APP_NAME: floating-stream-79447
-      HEROKU_REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ env.HEROKU_APP_NAME }}/web
+      HEROKU_REGISTRY_IMAGE: registry.heroku.com/floating-stream-79447/web
 
     steps:
       - name: Checkout repository
