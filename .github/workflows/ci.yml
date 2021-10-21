@@ -39,7 +39,7 @@ jobs:
           context: .
           file: Dockerfile.prod
           push: true
-          tags: latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
   test:
     runs-on: ubuntu-latest
@@ -68,5 +68,7 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Run tests
-        run: echo 'Did this work?'
+      - name: Install dependencies
+        run: pip install pytest
+      - name: Test
+        run: pytest -p no:warnings
