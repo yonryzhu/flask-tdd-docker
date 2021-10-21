@@ -48,6 +48,9 @@ jobs:
     permissions:
       packages: read
 
+    env:
+        WORKDIR: /usr/src/app
+
     container:
       image: ghcr.io/${{ github.repository }}:latest
       credentials:
@@ -71,10 +74,14 @@ jobs:
 
     steps:
       - name: ls
-        run: ls /usr/src/app
-      #   run: |
-      #     flake8 src
-      #     black src --check
-      #     isort src --check-only
-      # - name: Test
-      #   run: pytest -p no:warnings
+        working-directory: ${{ env.WORKDIR }}
+        run: ls -la
+      - name: Lint
+        working-directory: ${{ env.WORKDIR }}
+        run:  |
+          flake8 src
+          black src --check
+          isort src --check-only
+      - name: Test
+        working-directory: ${{ env.WORKDIR }}
+        run: pytest -p no:warnings
