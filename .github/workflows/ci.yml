@@ -70,12 +70,12 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Lint
-        run: |
-          pwd
-          ls
       - name: Test
-        run: pytest -p
+        run: pwd
+      - name: Lint
+        run: flake8
+      - name: Test
+        run: pytest
       #   run: |
       #     flake8 src
       #     black src --check
