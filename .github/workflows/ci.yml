@@ -71,8 +71,6 @@ jobs:
 
     steps:
       - name: ls
-        run: ls /github/workspace
-      - name: ls
         run: ls /usr/src/app
       #   run: |
       #     flake8 src
