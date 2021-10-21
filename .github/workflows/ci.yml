@@ -68,7 +68,10 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Install dependencies
-        run: pip install pytest
+      - name: Lint
+        run: |
+          flake8 src
+          black src --check
+          isort src --check-only
       - name: Test
         run: pytest -p no:warnings
