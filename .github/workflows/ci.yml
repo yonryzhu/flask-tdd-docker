@@ -116,6 +116,7 @@ jobs:
           tags: ${{ env.HEROKU_IMAGE }}
 
       - name: Create new release
+        working-directory: ${{ env.WORKDIR }}
         run: |
           chmod +x ./scripts/release.sh
           ./scripts/release.sh
