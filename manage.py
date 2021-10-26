@@ -1,7 +1,7 @@
 from flask.cli import FlaskGroup
 
 from src import create_app, db
-from src.api.models import User  # noqa: F401
+from src.api.users.models import User  # noqa: F401
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)

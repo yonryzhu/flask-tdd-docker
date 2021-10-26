@@ -3,7 +3,7 @@ from datetime import datetime
 from types import SimpleNamespace
 
 import pytest
-from src.api import crud
+from src.api.users import crud
 
 
 def test_add_user(test_app, monkeypatch):

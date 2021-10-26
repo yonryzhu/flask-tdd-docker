@@ -1,8 +1,8 @@
 from flask import Blueprint, request
 from flask_restx import Api, Resource, fields
 
-from src.api import crud
-from src.api.models import User
+from src.api.users import crud
+from src.api.users.models import User
 
 users_blueprint = Blueprint("users", __name__)
 api = Api(users_blueprint)

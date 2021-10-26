@@ -49,7 +49,8 @@ jobs:
       packages: read
 
     env:
-        WORKDIR: /usr/src/app
+      FLASK_ENV: testing
+      WORKDIR: /usr/src/app
 
     container:
       image: ghcr.io/${{ github.repository }}:latest
