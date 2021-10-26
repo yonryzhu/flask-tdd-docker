@@ -1,14 +1,13 @@
-from flask import Blueprint, request
-from flask_restx import Api, Resource, fields
+from flask import request
+from flask_restx import Namespace, Resource, fields
 
 from src.api.users import crud
 from src.api.users.models import User
 
-users_blueprint = Blueprint("users", __name__)
-api = Api(users_blueprint)
+users_namespace = Namespace("users")
 
 
-user = api.model(
+user = users_namespace.model(
     "User",
     {
         "id": fields.Integer(readOnly=True),
@@ -20,17 +19,17 @@ user = api.model(
 
 
 class Users(Resource):
-    @api.marshal_with(user)
+    @users_namespace.marshal_with(user)
     def get(self, user_id: int):
-        """Returns a user given their user_id"""
+        """Returns a user."""
         user = crud.get_user_by_id(user_id)
         if not user:
-            api.abort(404, f"User {user_id} does not exist")
+            users_namespace.abort(404, f"User {user_id} does not exist")
         return user, 200
 
-    @api.expect(user, validate=True)
+    @users_namespace.expect(user, validate=True)
     def put(self, user_id: int):
-        """Updates a user's email and name"""
+        """Updates a user."""
         data = request.get_json()
         username = data["username"]
         email = data["email"]
@@ -38,7 +37,7 @@ class Users(Resource):
 
         user = crud.get_user_by_id(user_id)
         if not user:
-            api.abort(404, f"User {user_id} does not exist")
+            users_namespace.abort(404, f"User {user_id} does not exist")
 
         if crud.get_user_by_email(email):
             response["message"] = "Sorry. That email already exists."
@@ -49,12 +48,12 @@ class Users(Resource):
         return response, 200
 
     def delete(self, user_id: int):
-        """Deletes a user given their user_id"""
+        """Deletes a user."""
         response = {}
 
         user = crud.get_user_by_id(user_id)
         if user is None:
-            api.abort(404, f"User {user_id} does not exist")
+            users_namespace.abort(404, f"User {user_id} does not exist")
 
         crud.delete_user(user)
         response["message"] = f"{user.email} was removed!"
@@ -62,9 +61,9 @@ class Users(Resource):
 
 
 class UsersList(Resource):
-    @api.expect(user, validate=True)
+    @users_namespace.expect(user, validate=True)
     def post(self) -> tuple[dict, int]:
-        """Creates and adds a new user"""
+        """Creates a user."""
         data = request.get_json()
         username = data.get("username")
         email = data.get("email")
@@ -78,12 +77,12 @@ class UsersList(Resource):
         response = {"message": f"{email} was added!"}
         return response, 201
 
-    @api.marshal_with(user, as_list=True)
+    @users_namespace.marshal_with(user, as_list=True)
     def get(self) -> tuple[list[User], int]:
-        """Returns a list of users"""
+        """Returns all users"""
         users = crud.get_all_users()
         return users, 200
 
 
-api.add_resource(Users, "/users/<int:user_id>")
-api.add_resource(UsersList, "/users")
+users_namespace.add_resource(Users, "/<int:user_id>")
+users_namespace.add_resource(UsersList, "")
