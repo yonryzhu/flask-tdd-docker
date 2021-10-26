@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_restx import Api, Resource, fields
 
-from src import db
+from src.api import crud
 from src.api.models import User
 
 users_blueprint = Blueprint("users", __name__)
@@ -23,7 +23,7 @@ class Users(Resource):
     @api.marshal_with(user)
     def get(self, user_id: int):
         """Returns a user given their user_id"""
-        user = User.query.filter_by(id=user_id).first()
+        user = crud.get_user_by_id(user_id)
         if not user:
             api.abort(404, f"User {user_id} does not exist")
         return user, 200
@@ -36,32 +36,27 @@ class Users(Resource):
         email = data["email"]
         response = {}
 
-        user = User.query.filter_by(id=user_id).first()
+        user = crud.get_user_by_id(user_id)
         if not user:
             api.abort(404, f"User {user_id} does not exist")
 
-        if User.query.filter_by(email=email).first():
+        if crud.get_user_by_email(email):
             response["message"] = "Sorry. That email already exists."
             return response, 400
 
-        user.username = username
-        user.email = email
-        db.session.commit()
-
+        crud.update_user(user, username, email)
         response["message"] = f"{user.id} was updated!"
         return response, 200
 
     def delete(self, user_id: int):
         """Deletes a user given their user_id"""
         response = {}
-        user = User.query.filter_by(id=user_id).first()
 
+        user = crud.get_user_by_id(user_id)
         if user is None:
             api.abort(404, f"User {user_id} does not exist")
 
-        db.session.delete(user)
-        db.session.commit()
-
+        crud.delete_user(user)
         response["message"] = f"{user.email} was removed!"
         return response, 200
 
@@ -74,22 +69,20 @@ class UsersList(Resource):
         username = data.get("username")
         email = data.get("email")
 
-        user = User.query.filter_by(email=email).first()
+        user = crud.get_user_by_email(email)
         if user:
             response = {"message": "Sorry. That email already exists."}
             return response, 400
 
-        user = User(username=username, email=email)
-        db.session.add(user)
-        db.session.commit()
-
+        user = crud.add_user(username, email)
         response = {"message": f"{email} was added!"}
         return response, 201
 
     @api.marshal_with(user, as_list=True)
     def get(self) -> tuple[list[User], int]:
         """Returns a list of users"""
-        return User.query.all(), 200
+        users = crud.get_all_users()
+        return users, 200
 
 
 api.add_resource(Users, "/users/<int:user_id>")
